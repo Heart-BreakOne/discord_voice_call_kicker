@@ -1,10 +1,11 @@
 
-import discord, asyncio, random
+
+import discord, asyncio, random, subprocess
 from discord.ext import commands
 
-GUILD_ID = Guild ID integer
-VOICE_CHANNEL_ID = Voice channel ID integer
-BOT_TOKEN = "Bot token"
+BOT_TOKEN = ""
+GUILD_ID = 0
+VOICE_CHANNEL_ID = 0
 
 intents = discord.Intents.default()
 intents.voice_states = True
@@ -18,7 +19,12 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 async def on_ready():
     print(f'Logged in as {bot.user}')
 
-@bot.command()
+@bot.command(name='disk')
+async def disk(ctx):
+    d = subprocess.run(['df', '-h'], capture_output=True, text=True)
+    await ctx.send(f'```\n{d.stdout}\n```')
+
+@bot.command(name='end')
 async def end(ctx, time_in_seconds: int):
     guild = bot.get_guild(GUILD_ID)
     if guild is None:
